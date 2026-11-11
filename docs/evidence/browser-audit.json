@@ -1,0 +1,256 @@
+{
+  "measuredAt": "2026-11-11T12:19:16.990Z",
+  "browser": "157.0.8103.39",
+  "node": "v22.18.0",
+  "platform": "win32 10.0.26300 x64",
+  "cpu": "Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
+  "mode": "Vite development, headless Chrome, full motion, no CPU/network throttling",
+  "limitations": "Input latency ends at the next rAF callback, not actual pixel presentation. Heap includes Vite and browser state; 12 cycles cannot prove leak-freedom. No mobile hardware or 60 FPS guarantee.",
+  "measurements": {
+    "moves": 24,
+    "score": 3480,
+    "inputToNextRafMs": {
+      "median": 29.100000023841858,
+      "p95": 71.10000002384186,
+      "max": 267.8000000715256
+    },
+    "rafIntervalMs": {
+      "samples": 1206,
+      "median": 16.600000000002183,
+      "p95": 49.79999999999927,
+      "max": 398.9000000000001
+    },
+    "dom": {
+      "additions": 1087,
+      "removals": 1087,
+      "survivingTileComparisons": 1430,
+      "retainedIdentities": 1430,
+      "finalTiles": 64
+    },
+    "controller": {
+      "moves": [
+        {
+          "ms": 1347,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 751.7,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 1286,
+          "frames": 6,
+          "combo": 2
+        },
+        {
+          "ms": 776.5,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 753.9,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 768.5,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 757.9,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 1803.4,
+          "frames": 8,
+          "combo": 3
+        },
+        {
+          "ms": 1825.7,
+          "frames": 8,
+          "combo": 3
+        },
+        {
+          "ms": 783.4,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 1761.4,
+          "frames": 8,
+          "combo": 3
+        },
+        {
+          "ms": 794.1,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 817.8,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 762.3,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 1807,
+          "frames": 8,
+          "combo": 3
+        },
+        {
+          "ms": 783.6,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 785.2,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 766.4,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 841.2,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 1488.9,
+          "frames": 6,
+          "combo": 2
+        },
+        {
+          "ms": 1749.5,
+          "frames": 8,
+          "combo": 3
+        },
+        {
+          "ms": 760.4,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 1242.8,
+          "frames": 6,
+          "combo": 2
+        },
+        {
+          "ms": 750.8,
+          "frames": 4,
+          "combo": 1
+        }
+      ],
+      "cancellations": 0,
+      "frames": 184
+    }
+  },
+  "lifecycle": [
+    {
+      "cycle": 0,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3790996,
+      "nodes": 3809,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 1,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3820692,
+      "nodes": 3809,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 2,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3821012,
+      "nodes": 3809,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 3,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3852844,
+      "nodes": 3809,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 4,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3857492,
+      "nodes": 3809,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 5,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3865068,
+      "nodes": 3809,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 6,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3866396,
+      "nodes": 3809,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 7,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3953952,
+      "nodes": 3809,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 8,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3955744,
+      "nodes": 3809,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 9,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3959056,
+      "nodes": 3809,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 10,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3959716,
+      "nodes": 3809,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 11,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3961736,
+      "nodes": 3809,
+      "eventListeners": 16
+    }
+  ],
+  "pageErrors": []
+}
