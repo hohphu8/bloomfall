@@ -1,6 +1,6 @@
 # Bloomfall
 
-A botanical match-three game built with **published GyosJS 0.5.0**, HTML, CSS and JavaScript. One standalone project: no Laravel, backend, account, game engine or remote repository required.
+A botanical match-three game built with **published GyosJS 0.5.1**, HTML, CSS and JavaScript. One standalone project: no Laravel, backend, account, game engine or remote repository required.
 
 ![Bloomfall desktop garden](docs/evidence/desktop.png)
 

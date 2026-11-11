@@ -162,7 +162,7 @@ for (let cycle = 0; cycle < 12; cycle++) {
   });
 }
 const result = {
-  runtime: process.env.BLOOMFALL_RUNTIME_LABEL || "published gyosjs@0.5.0",
+  runtime: process.env.BLOOMFALL_RUNTIME_LABEL || "published gyosjs@0.5.1",
   measuredAt: new Date().toISOString(),
   browser: browser.version(),
   node: process.version,

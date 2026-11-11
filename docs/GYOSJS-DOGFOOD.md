@@ -2,6 +2,8 @@
 
 ## Scope and outcome
 
+Current runtime: published `gyosjs@0.5.1` (rollout on 2026-11-12). The original 0.5.0 measurements and candidate comparison below are historical evidence.
+
 Bloomfall is one complete, standalone reactive-DOM match-three game, built against the published `gyosjs@0.5.0` package. The rules engine uses no framework; GyosJS owns the rendered board and controls. No core source or npm package was patched to make this game work.
 
 This workload exercises repeated keyed reordering, replacement and removal, multiple derived HUD values, animation cancellation, replay, browser storage and scope teardown. It does not establish suitability for a continuous physics simulation, canvas rendering, large boards, multiplayer or worker-heavy applications.
@@ -86,3 +88,9 @@ Bloomfall's comparison server aliases only `gyosjs/csp` to a supplied core bundl
 The deterministic mutation count falls **63.8%**. These counts include retained-node moves and actual replacements, not newly allocated tiles alone. Timing samples vary substantially: the earlier baseline above already had a 29.1 ms median, so this pair does not establish a universal speedup or 60 FPS. Both runs kept 3,810 DOM nodes and 16 listeners across 12 cleanup/GC cycles. Candidate heap levels were higher (~5.34–5.49 MB versus ~3.86–4.03 MB); the direct-source candidate and dependency-optimized baseline have different development loading, so this is not evidence of a memory reduction or proof of leak-freedom.
 
 The complete browser suite against the candidate passed **46 tests**, with **2 CDP-only touch cases skipped** on non-Chromium browsers. Core validation passed 313 distinct unit/integration tests (after removing two duplicate cases) and 123 browser tests, with 6 existing Windows WebKit audio skips. No gameplay rule, replay format, package version or production runtime import changed in this follow-up.
+
+### Published 0.5.1 rollout
+
+The exact npm dependency and lockfile now use 0.5.1. The registry tarball SHA-256 matches the verified release artifact (`9aca9a6362b037a4e17d3d73304069e1e6deb159ced8dc40e0b953637ee40629`), and both CDN bundles match that package. The production build uses the normal package import; no candidate alias is enabled.
+
+Engine tests (5), the production build and production smoke (1) passed. The first full browser run passed 45 cases, skipped the two non-Chromium CDP touch cases, and exposed a timing assumption in the Firefox pause test: automation could click Pause after the move had already finished. The test now dispatches the second tile click and Pause in one browser task, ensuring it actually exercises an unfinished move. That targeted case passed twice on each of Chromium, Firefox and WebKit (6 passes). No gameplay code changed to accommodate this test.

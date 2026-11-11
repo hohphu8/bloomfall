@@ -413,8 +413,15 @@ test("pause holds an unfinished move and rapid input cannot spend extra moves", 
   const initial = await ready(page),
     pair = legalMoves(initial.board)[0];
   await page.locator(`[data-slot="${pair[0]}"]`).click();
-  await page.locator(`[data-slot="${pair[1]}"]`).click();
-  await page.getByRole("button", { name: "Pause", exact: true }).click();
+  // Start and pause in one browser task so automation latency cannot let the
+  // whole animation finish before this unfinished-move assertion is exercised.
+  await page.getByRole("button", { name: "Pause", exact: true }).evaluate(
+    (pause, slot) => {
+      document.querySelector(`[data-slot="${slot}"]`).click();
+      pause.click();
+    },
+    pair[1],
+  );
   await page.waitForTimeout(700);
   expect(await page.evaluate(() => window.__bloomfall.snapshot())).toEqual(
     initial,
