@@ -75,11 +75,179 @@ async function ready(page, seed = "test-garden") {
   await expect(page.locator("#game")).not.toHaveAttribute("g-cloak");
   return state;
 }
+
+test("mouse hold lifts a piece, tracks direction and drops exactly one swap", async ({
+  page,
+}) => {
+  const state = await ready(page),
+    pair = legalMoves(state.board)[0];
+  const source = page.locator(`[data-id="${state.board[pair[0]].id}"]`);
+  const box = await source.boundingBox();
+  const x = box.x + box.width / 2,
+    y = box.y + box.height / 2;
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  await expect(source).toHaveClass(/dragging/);
+  expect(await source.evaluate((el) => getComputedStyle(el).cursor)).toBe(
+    "grabbing",
+  );
+  // Reverse direction while held: no move commits until release.
+  const row = Math.floor(pair[0] / 8),
+    col = pair[0] % 8;
+  const vertical = row < 7 ? 1 : -1,
+    horizontal = col < 7 ? 1 : -1;
+  await page.mouse.move(x, y + vertical * box.height * 0.7, { steps: 3 });
+  await expect(
+    page.locator(`[data-slot="${pair[0] + vertical * 8}"]`),
+  ).toHaveClass(/drag-target/);
+  await page.mouse.move(x + horizontal * box.width * 0.7, y, { steps: 3 });
+  await expect(
+    page.locator(`[data-slot="${pair[0] + horizontal}"]`),
+  ).toHaveClass(/drag-target/);
+  const delta = pair[1] - pair[0];
+  await page.mouse.move(
+    x + (delta === 1 ? box.width : 0),
+    y + (delta === 8 ? box.height : 0),
+    { steps: 3 },
+  );
+  await expect(page.locator(`[data-slot="${pair[1]}"]`)).toHaveClass(
+    /drag-target/,
+  );
+  expect(
+    await source.evaluate((el) => getComputedStyle(el).transform),
+  ).not.toBe("none");
+  expect(await page.evaluate(() => window.__bloomfall.snapshot())).toEqual(
+    state,
+  );
+  await page.mouse.up();
+  await expect(page.locator(".dragging, .drag-target")).toHaveCount(0);
+  await expect(page.locator("#board")).toHaveAttribute("aria-busy", "false");
+  expect(await page.evaluate(() => window.__bloomfall.snapshot())).toEqual(
+    play(state, ...pair).state,
+  );
+  await expect(page.locator(".selected")).toHaveCount(0);
+});
+
+test("returning, dropping outside and Escape cancel a drag without consuming a move", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const state = await ready(page);
+  const source = page.locator('[data-slot="27"]');
+  await source.evaluate((el) =>
+    el.addEventListener("pointerdown", (event) => {
+      el.__testPointerId = event.pointerId;
+    }),
+  );
+  for (const action of [
+    "return",
+    "outside",
+    "escape",
+    "capture-loss",
+    "pointer-cancel",
+    "blur",
+  ]) {
+    const box = await source.boundingBox(),
+      x = box.x + box.width / 2,
+      y = box.y + box.height / 2;
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x + box.width, y, { steps: 3 });
+    await expect(source).toHaveClass(/dragging/);
+    if (action === "return") await page.mouse.move(x, y, { steps: 3 });
+    if (action === "outside") await page.mouse.move(2, 2, { steps: 3 });
+    if (action === "escape") await page.keyboard.press("Escape");
+    if (action === "capture-loss")
+      await source.evaluate((el) =>
+        el.releasePointerCapture(el.__testPointerId),
+      );
+    if (action === "pointer-cancel")
+      await source.evaluate((el) =>
+        el.dispatchEvent(
+          new PointerEvent("pointercancel", {
+            bubbles: true,
+            pointerId: el.__testPointerId,
+          }),
+        ),
+      );
+    if (action === "blur")
+      await page.evaluate(() => window.dispatchEvent(new Event("blur")));
+    await page.mouse.up();
+    await expect(page.locator(".dragging, .drag-target")).toHaveCount(0);
+    expect(await page.evaluate(() => window.__bloomfall.snapshot())).toEqual(
+      state,
+    );
+    await expect(page.locator("#board")).toHaveAttribute("aria-busy", "false");
+  }
+  // A cancelled gesture must not swallow the next keyboard selection.
+  await source.focus();
+  await page.keyboard.press("Enter");
+  await expect(source).toHaveAttribute("aria-pressed", "true");
+});
 async function move(page, pair) {
   await page.locator(`.tile[data-slot="${pair[0]}"]`).click();
   await page.locator(`.tile[data-slot="${pair[1]}"]`).click();
   await expect(page.locator("#board")).toHaveAttribute("aria-busy", "false");
 }
+
+test("cleanup while holding a piece releases capture and cancels its pending frame", async ({
+  page,
+}) => {
+  const state = await ready(page);
+  const tile = page.locator('[data-slot="27"]'),
+    box = await tile.boundingBox();
+  await tile.evaluate((el) =>
+    el.addEventListener("pointerdown", (event) => {
+      el.__testPointerId = event.pointerId;
+    }),
+  );
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  const result = await tile.evaluate((el) => {
+    const request = window.requestAnimationFrame.bind(window),
+      cancel = window.cancelAnimationFrame.bind(window);
+    const pending = new Set();
+    window.requestAnimationFrame = (callback) => {
+      const id = request((time) => {
+        pending.delete(id);
+        callback(time);
+      });
+      pending.add(id);
+      return id;
+    };
+    window.cancelAnimationFrame = (id) => {
+      pending.delete(id);
+      cancel(id);
+    };
+    const box = el.getBoundingClientRect();
+    el.dispatchEvent(
+      new PointerEvent("pointermove", {
+        bubbles: true,
+        pointerId: el.__testPointerId,
+        clientX: box.right,
+        clientY: box.y + box.height / 2,
+      }),
+    );
+    const scheduled = pending.size;
+    window.__bloomfall.dispose();
+    const result = {
+      scheduled,
+      pending: pending.size,
+      captured: el.hasPointerCapture(el.__testPointerId),
+    };
+    window.requestAnimationFrame = request;
+    window.cancelAnimationFrame = cancel;
+    return result;
+  });
+  await page.mouse.up();
+  expect(result).toEqual({ scheduled: 1, pending: 0, captured: false });
+  expect(await page.evaluate(() => window.__bloomfall)).toBeUndefined();
+  expect(
+    await page.evaluate(() =>
+      JSON.parse(localStorage.getItem("bloomfall.garden.v1")),
+    ),
+  ).toEqual(recordOf(state));
+});
 
 test("valid swaps, keyed identity, save, reload and undo agree with the deterministic engine", async ({
   page,

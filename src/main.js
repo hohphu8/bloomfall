@@ -52,6 +52,10 @@ Gyos.scope("Garden", () => {
     focusSlot = signal(0),
     busy = signal(false),
     paused = signal(false);
+  const dragSlot = signal(-1),
+    dragTarget = signal(-1),
+    dragStyle = signal("");
+  let dragFrame = 0;
   const replaying = signal(false),
     replayStep = signal(0),
     replayTotal = signal(0),
@@ -168,6 +172,7 @@ Gyos.scope("Garden", () => {
   }
 
   function cancel() {
+    cancelDrag();
     abort.abort();
     abort = new AbortController();
     metrics.cancellations++;
@@ -319,11 +324,12 @@ Gyos.scope("Garden", () => {
     }
   }
 
-  function choose(slot) {
-    if (ignoreClick) {
+  function choose(slot, event) {
+    if (ignoreClick && event?.detail !== 0) {
       ignoreClick = false;
       return;
     }
+    ignoreClick = false;
     if (locked()) return;
     focusSlot(slot);
     if (selected() === slot) {
@@ -353,6 +359,7 @@ Gyos.scope("Garden", () => {
       ArrowDown: [1, 0],
     };
     if (event.key === "Escape") {
+      cancelDrag();
       selected(-1);
       hinted([]);
       message("Selection cleared. Take your time.");
@@ -369,35 +376,125 @@ Gyos.scope("Garden", () => {
   }
 
   function pointerDown(event) {
+    if (pointer) return;
     ignoreClick = false;
     if (locked() || !event.isPrimary || event.button !== 0) return;
     const tile = event.target.closest(".tile");
-    if (tile)
+    if (tile) {
+      const bounds = document.getElementById("board").getBoundingClientRect();
       pointer = {
         id: event.pointerId,
         slot: Number(tile.dataset.slot),
         x: event.clientX,
         y: event.clientY,
+        dx: 0,
+        dy: 0,
+        target: -1,
+        moved: false,
+        tile,
+        bounds,
       };
+      tile.setPointerCapture(event.pointerId);
+      dragSlot(pointer.slot);
+      dragStyle("--drag-x:0px;--drag-y:0px;");
+    }
   }
-  function pointerUp(event) {
+  function updateDrag(event) {
     const start = pointer;
-    pointer = null;
-    if (!start || start.id !== event.pointerId || locked()) return;
     const dx = event.clientX - start.x,
       dy = event.clientY - start.y;
-    if (Math.max(Math.abs(dx), Math.abs(dy)) < 18) return;
-    ignoreClick = true;
+    if (!start.moved && Math.max(Math.abs(dx), Math.abs(dy)) >= 6) {
+      start.moved = true;
+      selected(-1);
+      hinted([]);
+      message("Release to swap with the outlined neighbor. Escape cancels.");
+    }
     const row = Math.floor(start.slot / 8),
       col = start.slot % 8;
+    const cellWidth = start.bounds.width / 8,
+      cellHeight = start.bounds.height / 8;
+    // A match-three move reaches only one neighbor; keep the held piece on the board.
+    start.dx = Math.max(
+      col ? -cellWidth : 0,
+      Math.min(col < 7 ? cellWidth : 0, dx),
+    );
+    start.dy = Math.max(
+      row ? -cellHeight : 0,
+      Math.min(row < 7 ? cellHeight : 0, dy),
+    );
     const nextRow = row + (Math.abs(dy) > Math.abs(dx) ? Math.sign(dy) : 0);
     const nextCol = col + (Math.abs(dx) >= Math.abs(dy) ? Math.sign(dx) : 0);
-    if (nextRow < 0 || nextRow > 7 || nextCol < 0 || nextCol > 7) return;
-    focusSlot(nextRow * 8 + nextCol);
-    void animateMove(start.slot, focusSlot(), abort.signal);
+    const inside =
+      event.clientX >= start.bounds.left &&
+      event.clientX <= start.bounds.right &&
+      event.clientY >= start.bounds.top &&
+      event.clientY <= start.bounds.bottom;
+    start.target =
+      inside &&
+      Math.max(Math.abs(dx), Math.abs(dy)) >= 18 &&
+      nextRow >= 0 &&
+      nextRow < 8 &&
+      nextCol >= 0 &&
+      nextCol < 8
+        ? nextRow * 8 + nextCol
+        : -1;
+  }
+  function pointerMove(event) {
+    if (!pointer || pointer.id !== event.pointerId) return;
+    if (locked()) {
+      cancelDrag();
+      return;
+    }
+    updateDrag(event);
+    if (!dragFrame)
+      dragFrame = requestAnimationFrame(() => {
+        dragFrame = 0;
+        if (!pointer) return;
+        // Coordinates update one board binding, without replacing the 64-item list.
+        Gyos.batch(() => {
+          dragStyle(`--drag-x:${pointer.dx}px;--drag-y:${pointer.dy}px;`);
+          dragTarget(pointer.target);
+        });
+      });
+  }
+  function clearDrag() {
+    const start = pointer;
+    pointer = null;
+    cancelAnimationFrame(dragFrame);
+    dragFrame = 0;
+    dragSlot(-1);
+    dragTarget(-1);
+    dragStyle("");
+    if (start?.tile.hasPointerCapture(start.id))
+      start.tile.releasePointerCapture(start.id);
+    return start;
+  }
+  function cancelDrag(event) {
+    if (!pointer || (event && event.pointerId !== pointer.id)) return;
+    ignoreClick = true;
+    const start = clearDrag();
+    if (start.moved) message("Move cancelled. Your garden is unchanged.");
+  }
+  function pointerUp(event) {
+    if (!pointer || pointer.id !== event.pointerId) return;
+    if (locked()) {
+      cancelDrag();
+      return;
+    }
+    updateDrag(event);
+    const start = clearDrag();
+    if (!start.moved) return; // A normal click still supports two-click selection.
+    ignoreClick = true;
+    if (start.target < 0) {
+      message("Back in place. No move lost.");
+      return;
+    }
+    focusSlot(start.target);
+    void animateMove(start.slot, start.target, abort.signal);
   }
 
   function openDialog(name) {
+    cancelDrag();
     if (replaying() && name === "restart") {
       stopReplay();
       return;
@@ -468,6 +565,7 @@ Gyos.scope("Garden", () => {
     }
   }
   function togglePause() {
+    cancelDrag();
     if (!finished()) {
       paused(!paused());
       if (!paused()) focusBoard();
@@ -593,6 +691,7 @@ Gyos.scope("Garden", () => {
     canReplay,
     rootClass,
     harvestView,
+    dragStyle,
     progressStyle: () => `width:${progress()}%`,
     saveDot: () => (saved() ? "" : "save-warning"),
     gardenLabel: () =>
@@ -623,7 +722,7 @@ Gyos.scope("Garden", () => {
         : `You grew ${score()} points toward 1,800. Try this same seed again, undo a move, or plant a fresh garden.`,
     tileIcon: (tile) => `#${TYPES[tile.kind][1]}`,
     tileClass: (tile) =>
-      `tile kind-${tile.kind}${selected() === tile.slot ? " selected" : ""}${hinted().includes(tile.slot) ? " hinted" : ""}${tile.clearing ? " clearing" : ""}`,
+      `tile kind-${tile.kind}${selected() === tile.slot ? " selected" : ""}${hinted().includes(tile.slot) ? " hinted" : ""}${tile.clearing ? " clearing" : ""}${dragSlot() === tile.slot ? " dragging" : ""}${dragTarget() === tile.slot ? " drag-target" : ""}`,
     tileStyle: (tile) =>
       `left:${(tile.slot % 8) * 12.5}%;top:${Math.floor((tile.origin ?? tile.slot) / 8) * 12.5}%;`,
     tileLabel: (tile) =>
@@ -631,10 +730,9 @@ Gyos.scope("Garden", () => {
     choose,
     keyDown,
     pointerDown,
+    pointerMove,
     pointerUp,
-    pointerCancel: () => {
-      pointer = null;
-    },
+    pointerCancel: cancelDrag,
     openDialog,
     closeDialog,
     restart,
@@ -669,11 +767,15 @@ Gyos.scope("Garden", () => {
       document.addEventListener(
         "visibilitychange",
         () => {
+          if (document.hidden) cancelDrag();
           if (document.hidden && audio?.state === "running")
             void audio.suspend();
         },
         { signal: lifetime.signal },
       );
+      window.addEventListener("blur", () => cancelDrag(), {
+        signal: lifetime.signal,
+      });
       window.addEventListener(
         "pagehide",
         () => {
@@ -711,6 +813,7 @@ Gyos.scope("Garden", () => {
     },
     onUnmount() {
       alive = false;
+      cancelDrag();
       abort.abort();
       lifetime.abort();
       if (audio) void audio.close();

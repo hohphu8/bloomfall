@@ -55,6 +55,12 @@ An early lifecycle probe appeared to retain every old root. Heap inspection trac
 
 ## What should follow for GyosJS
 
+### Follow-up: held-piece drag interaction
+
+Mouse/touch pointer capture now owns each held gesture. The piece lifts, follows the pointer within one neighboring cell and marks the proposed target; the engine receives a swap only on release. Returning to the origin, dropping outside, Escape, pointer cancellation/capture loss, window blur and teardown clear the gesture. Coordinates are coalesced to one animation frame and published through CSS variables on the board, without replacing the tile list. Reduced motion removes decorative transitions while direct manipulation remains visible.
+
+Verification for this follow-up: 22 distinct targeted cases passed across Chromium, Firefox and WebKit, with the two non-Chromium CDP touch cases skipped. Coverage includes direction changes before release, cancellation, keyboard use after cancellation, two-click swaps, mobile swipes, restart and cleanup. The cancellation test was corrected to use the actual pointer ID after Firefox exposed its different ID; all six cancellation/held-cleanup cases then passed. The production build passed and the held-piece desktop screenshot was visually inspected. Earlier performance measurements above are the original baseline, not a benchmark of pointer-move performance.
+
 1. **Document this integration pattern.** A small guide on deterministic domain state, reactive view projections, cancellation and keyed DOM would help developers build interactive applications without inventing another API.
 2. **Investigate keyed reordering cost with an isolated benchmark.** The identity behavior is correct, while mutation counts suggest room to reduce moves. Do not infer a core defect solely from this game's timing.
 3. **Evaluate an optional smaller entry point.** This game's production JS bundle is about 243 KB raw / 76.7 KB gzip with the current published CSP entry. Check what is retained before proposing a split; preserving the existing public API is essential.

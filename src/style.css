@@ -341,11 +341,17 @@ h1 em {
   background: none;
   transition:
     left 0.2s ease,
+    transform 0.2s ease,
     top 0.24s cubic-bezier(0.2, 0.7, 0.35, 1);
   display: block;
   touch-action: none;
   border-radius: 12px;
   z-index: 1;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.tile:not([aria-disabled="true"]) {
+  cursor: grab;
 }
 .tile-surface {
   display: grid;
@@ -437,6 +443,27 @@ h1 em {
 .tile:focus-visible .tile-surface {
   outline: 3px solid #465d3f;
   outline-offset: -2px;
+}
+.tile.dragging {
+  z-index: 7;
+  cursor: grabbing;
+  transition: none;
+  transform: translate(var(--drag-x, 0px), var(--drag-y, 0px));
+}
+.tile.dragging .tile-surface,
+.tile.dragging:hover .tile-surface {
+  transform: scale(1.08);
+  outline: 2px solid #577250;
+  outline-offset: -1px;
+  box-shadow:
+    0 8px 16px #314b4040,
+    0 3px 0 #b9c8aa65;
+  background: #fffdf2;
+}
+.tile.drag-target .tile-surface {
+  outline: 2px dashed #577250;
+  outline-offset: -3px;
+  background: #fffdf2;
 }
 .board-message {
   min-height: 52px;

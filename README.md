@@ -29,6 +29,7 @@ Deploy the contents of `dist/` to a static web host. Use HTTPS for clipboard sup
 - Match at least three pieces horizontally or vertically on an 8 × 8 board. Each matched piece earns 20 points; successive cascades multiply that by 2, 3, and so on.
 - Reach 1,800 points within 24 successful moves. Invalid swaps cost no moves. A board without a legal move automatically reshuffles.
 - Click/tap neighboring pieces, or swipe one piece toward its neighbor. Scroll the page outside the board; the board captures touch gestures.
+- Hold and drag a piece to lift it and preview a neighboring swap. Change direction before releasing; return to the starting point, drop outside the board or press Escape to cancel without spending a move.
 - Tab into the board, use arrows to move focus, and Enter/Space to select. Escape clears selection. Shapes and accessible names distinguish pieces independently of color.
 - Hint, undo, pause, confirmed restart, daily/random/custom gardens and shareable replay are available. Daily seeds change at midnight **UTC**; an existing saved garden stays until you choose another.
 - Sound is off by default. Sound & motion offers synthesized notes and reduced movement; the operating system's reduced-motion setting always wins.

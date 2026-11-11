@@ -199,8 +199,11 @@
               aria-describedby="board-instructions"
               :aria-busy="busy()"
               @pointerdown="pointerDown($event)"
+              @pointermove="pointerMove($event)"
               @pointerup="pointerUp($event)"
-              @pointercancel="pointerCancel()"
+              @pointercancel="pointerCancel($event)"
+              @lostpointercapture="pointerCancel($event)"
+              :style="dragStyle()"
             >
               <button
                 *for="tile in tiles()"
@@ -216,7 +219,7 @@
                 :aria-pressed="selected() === tile.slot"
                 :aria-disabled="locked()"
                 :tabindex="focusSlot() === tile.slot ? 0 : -1"
-                @click="choose(tile.slot)"
+                @click="choose(tile.slot, $event)"
                 @keydown="keyDown($event, tile.slot)"
               >
                 <span class="tile-surface"
