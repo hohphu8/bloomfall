@@ -1,100 +1,505 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f5ec">
-  <meta name="description" content="A little garden. A lovely chain reaction. Play Bloomfall, a free match-three puzzle with daily gardens and shareable replays.">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <title>Bloomfall — a little moment to grow</title>
-</head>
-<body>
-  <svg class="svg-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
-    <symbol id="flower" viewBox="0 0 48 48"><g fill="currentColor"><ellipse cx="24" cy="15" rx="7" ry="11"/><ellipse cx="24" cy="33" rx="7" ry="11"/><ellipse cx="15" cy="24" rx="11" ry="7"/><ellipse cx="33" cy="24" rx="11" ry="7"/></g><circle cx="24" cy="24" r="7" fill="#ffe8a3"/><circle cx="22" cy="22" r="2" fill="#fff8de"/></symbol>
-    <symbol id="leaf" viewBox="0 0 48 48"><path d="M10 36C1 11 21 5 39 8c4 19-5 32-22 30" fill="currentColor"/><path d="m11 39 20-22m-11 12-2-10m7 4 10 1" fill="none" stroke="#e5efba" stroke-width="3" stroke-linecap="round"/></symbol>
-    <symbol id="berry" viewBox="0 0 48 48"><path d="M25 16q-4-11 7-13" fill="none" stroke="#668257" stroke-width="3" stroke-linecap="round"/><path d="M25 13Q7 12 13 3q13 0 12 10" fill="#8fa673"/><g fill="currentColor"><circle cx="17" cy="24" r="10"/><circle cx="31" cy="24" r="10"/><circle cx="24" cy="35" r="10"/></g><path d="M13 20q2-3 5-3m9 3q2-3 5-3m-12 12 2-1" fill="none" stroke="#e8c2ef" stroke-width="3" stroke-linecap="round"/></symbol>
-    <symbol id="sun" viewBox="0 0 48 48"><g stroke="currentColor" stroke-width="4" stroke-linecap="round"><path d="M24 4v4m0 32v4M4 24h4m32 0h4M10 10l3 3m22 22 3 3M10 38l3-3m22-22 3-3"/></g><circle cx="24" cy="24" r="12" fill="currentColor"/><path d="M17 20q3-5 8-4" stroke="#fff3bf" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
-    <symbol id="drop" viewBox="0 0 48 48"><path d="M24 3S8 21 8 29a16 16 0 0 0 32 0C40 21 24 3 24 3Z" fill="currentColor"/><path d="M16 26q-5 8 3 12" stroke="#d8f5ff" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
-    <symbol id="star" viewBox="0 0 48 48"><path d="m24 3 6.5 13.5 15 2-11 10.5 3 15L24 37l-13.5 7 3-15L2 18.5l15-2Z" fill="currentColor" stroke-linejoin="round"/><path d="m23 12-4 9-7 1" stroke="#ffe6c3" stroke-width="3" stroke-linecap="round" fill="none"/></symbol>
-  </defs></svg>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f5ec" />
+    <meta
+      name="description"
+      content="A little garden. A lovely chain reaction. Play Bloomfall, a free match-three puzzle with daily gardens and shareable replays."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Bloomfall — a little moment to grow</title>
+  </head>
+  <body>
+    <svg
+      class="svg-library"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <symbol id="flower" viewBox="0 0 48 48">
+          <g fill="currentColor">
+            <ellipse cx="24" cy="15" rx="7" ry="11" />
+            <ellipse cx="24" cy="33" rx="7" ry="11" />
+            <ellipse cx="15" cy="24" rx="11" ry="7" />
+            <ellipse cx="33" cy="24" rx="11" ry="7" />
+          </g>
+          <circle cx="24" cy="24" r="7" fill="#ffe8a3" />
+          <circle cx="22" cy="22" r="2" fill="#fff8de" />
+        </symbol>
+        <symbol id="leaf" viewBox="0 0 48 48">
+          <path d="M10 36C1 11 21 5 39 8c4 19-5 32-22 30" fill="currentColor" />
+          <path
+            d="m11 39 20-22m-11 12-2-10m7 4 10 1"
+            fill="none"
+            stroke="#e5efba"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+        </symbol>
+        <symbol id="berry" viewBox="0 0 48 48">
+          <path
+            d="M25 16q-4-11 7-13"
+            fill="none"
+            stroke="#668257"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+          <path d="M25 13Q7 12 13 3q13 0 12 10" fill="#8fa673" />
+          <g fill="currentColor">
+            <circle cx="17" cy="24" r="10" />
+            <circle cx="31" cy="24" r="10" />
+            <circle cx="24" cy="35" r="10" />
+          </g>
+          <path
+            d="M13 20q2-3 5-3m9 3q2-3 5-3m-12 12 2-1"
+            fill="none"
+            stroke="#e8c2ef"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+        </symbol>
+        <symbol id="sun" viewBox="0 0 48 48">
+          <g stroke="currentColor" stroke-width="4" stroke-linecap="round">
+            <path
+              d="M24 4v4m0 32v4M4 24h4m32 0h4M10 10l3 3m22 22 3 3M10 38l3-3m22-22 3-3"
+            />
+          </g>
+          <circle cx="24" cy="24" r="12" fill="currentColor" />
+          <path
+            d="M17 20q3-5 8-4"
+            stroke="#fff3bf"
+            stroke-width="3"
+            fill="none"
+            stroke-linecap="round"
+          />
+        </symbol>
+        <symbol id="drop" viewBox="0 0 48 48">
+          <path
+            d="M24 3S8 21 8 29a16 16 0 0 0 32 0C40 21 24 3 24 3Z"
+            fill="currentColor"
+          />
+          <path
+            d="M16 26q-5 8 3 12"
+            stroke="#d8f5ff"
+            stroke-width="3"
+            fill="none"
+            stroke-linecap="round"
+          />
+        </symbol>
+        <symbol id="star" viewBox="0 0 48 48">
+          <path
+            d="m24 3 6.5 13.5 15 2-11 10.5 3 15L24 37l-13.5 7 3-15L2 18.5l15-2Z"
+            fill="currentColor"
+            stroke-linejoin="round"
+          />
+          <path
+            d="m23 12-4 9-7 1"
+            stroke="#ffe6c3"
+            stroke-width="3"
+            stroke-linecap="round"
+            fill="none"
+          />
+        </symbol>
+      </defs>
+    </svg>
 
-  <div id="game" g-scope="Garden" g-cloak :class="rootClass()">
-    <header class="site-header">
-      <a class="wordmark" href="./" aria-label="Bloomfall home"><svg aria-hidden="true"><use href="#flower"/></svg> bloomfall<span class="wordmark-dot">.</span></a>
-      <div class="header-note">a little moment to grow</div>
-      <button class="icon-button help-button" @click="openDialog('help')" aria-label="How to play">?</button>
-    </header>
+    <div id="game" g-scope="Garden" g-cloak :class="rootClass()">
+      <header class="site-header">
+        <a class="wordmark" href="./" aria-label="Bloomfall home"
+          ><svg aria-hidden="true"><use href="#flower" /></svg> bloomfall<span
+            class="wordmark-dot"
+            >.</span
+          ></a
+        >
+        <div class="header-note">a little moment to grow</div>
+        <button
+          class="icon-button help-button"
+          @click="openDialog('help')"
+          aria-label="How to play"
+        >
+          ?
+        </button>
+      </header>
 
-    <main id="main" class="garden-layout">
-      <section class="garden-story" aria-labelledby="game-title">
-        <div class="eyebrow"><span class="tiny-sun">✳</span> YOUR POCKET-SIZED PAUSE</div>
-        <h1 id="game-title">Small matches.<br>Lovely <em>things.</em></h1>
-        <p class="intro">Swap a little. Bloom a lot.<br>Make room for a slower kind of play.</p>
-        <div class="garden-card">
-          <div class="card-kicker"><span class="live-dot"></span> {gardenLabel()}</div>
-          <h2>{gardenTitle()}</h2>
-          <p class="seed-line">Garden <span>{seed()}</span></p>
-          <div class="goal-label"><span>Grow your garden</span><strong>{progress()}%</strong></div>
-          <div class="growth-track" role="progressbar" aria-label="Garden score goal" :aria-valuenow="progress()" aria-valuemin="0" aria-valuemax="100"><span :style="progressStyle()"></span></div>
-          <p class="goal-caption">Reach <strong>1,800 points</strong> in 24 moves.<br>Every cascade makes more room to bloom.</p>
-          <button class="text-button garden-switch" @click="openDialog('garden')">Explore another garden <span aria-hidden="true">↗</span></button>
-        </div>
-        <div class="botanical-note"><svg aria-hidden="true"><use href="#leaf"/></svg><p>No rush. No timer.<br>Just one good move at a time.</p></div>
-      </section>
-
-      <section class="play-area" aria-label="Match-three garden">
-        <div class="board-heading"><span class="eyebrow">{modeLabel()}</span><span class="best-score">PERSONAL BEST <strong>{best()}</strong></span></div>
-        <div class="score-strip">
-          <div class="score-stat"><span class="stat-label">SCORE</span><strong data-testid="score">{score()}</strong></div>
-          <div class="combo-stat"><svg aria-hidden="true"><use href="#flower"/></svg><span>{comboLabel()}</span></div>
-          <div class="moves-stat"><span class="stat-label">MOVES LEFT</span><strong data-testid="moves">{moves()}</strong></div>
-        </div>
-        <div class="board-shell">
-          <div id="board" class="board" role="group" aria-label="Garden board, 8 rows by 8 columns" aria-describedby="board-instructions" :aria-busy="busy()" @pointerdown="pointerDown($event)" @pointerup="pointerUp($event)" @pointercancel="pointerCancel()">
-            <button *for="tile in tiles()" g-key="tile.id" type="button" class="tile" :class="tileClass(tile)" :style="tileStyle(tile)" :data-slot="tile.slot" :data-id="tile.id" :data-kind="tile.kind" :aria-label="tileLabel(tile)" :aria-pressed="selected() === tile.slot" :aria-disabled="locked()" :tabindex="focusSlot() === tile.slot ? 0 : -1" @click="choose(tile.slot)" @keydown="keyDown($event, tile.slot)">
-              <span class="tile-surface"><svg aria-hidden="true"><use :href="tileIcon(tile)"/></svg></span>
+      <main id="main" class="garden-layout">
+        <section class="garden-story" aria-labelledby="game-title">
+          <div class="eyebrow">
+            <span class="tiny-sun">✳</span> YOUR POCKET-SIZED PAUSE
+          </div>
+          <h1 id="game-title">Small matches.<br />Lovely <em>things.</em></h1>
+          <p class="intro">
+            Swap a little. Bloom a lot.<br />Make room for a slower kind of
+            play.
+          </p>
+          <div class="garden-card">
+            <div class="card-kicker">
+              <span class="live-dot"></span> {gardenLabel()}
+            </div>
+            <h2>{gardenTitle()}</h2>
+            <p class="seed-line">Garden <span>{seed()}</span></p>
+            <div class="goal-label">
+              <span>Grow your garden</span><strong>{progress()}%</strong>
+            </div>
+            <div
+              class="growth-track"
+              role="progressbar"
+              aria-label="Garden score goal"
+              :aria-valuenow="progress()"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              <span :style="progressStyle()"></span>
+            </div>
+            <p class="goal-caption">
+              Reach <strong>1,800 points</strong> in 24 moves.<br />Every
+              cascade makes more room to bloom.
+            </p>
+            <button
+              class="text-button garden-switch"
+              @click="openDialog('garden')"
+            >
+              Explore another garden <span aria-hidden="true">↗</span>
             </button>
           </div>
-          <div class="pause-cover" g-show="paused()"><span class="eyebrow">TAKE YOUR TIME</span><h2>A little breather.</h2><p>Your garden will wait for you.</p><button class="primary-button" @click="togglePause()">Back to the garden <span aria-hidden="true">→</span></button></div>
+          <div class="botanical-note">
+            <svg aria-hidden="true"><use href="#leaf" /></svg>
+            <p>No rush. No timer.<br />Just one good move at a time.</p>
+          </div>
+        </section>
+
+        <section class="play-area" aria-label="Match-three garden">
+          <div class="board-heading">
+            <span class="eyebrow">{modeLabel()}</span
+            ><span class="best-score"
+              >PERSONAL BEST <strong>{best()}</strong></span
+            >
+          </div>
+          <div class="score-strip">
+            <div class="score-stat">
+              <span class="stat-label">SCORE</span
+              ><strong data-testid="score">{score()}</strong>
+            </div>
+            <div class="combo-stat">
+              <svg aria-hidden="true"><use href="#flower" /></svg
+              ><span>{comboLabel()}</span>
+            </div>
+            <div class="moves-stat">
+              <span class="stat-label">MOVES LEFT</span
+              ><strong data-testid="moves">{moves()}</strong>
+            </div>
+          </div>
+          <div class="board-shell">
+            <div
+              id="board"
+              class="board"
+              role="group"
+              aria-label="Garden board, 8 rows by 8 columns"
+              aria-describedby="board-instructions"
+              :aria-busy="busy()"
+              @pointerdown="pointerDown($event)"
+              @pointerup="pointerUp($event)"
+              @pointercancel="pointerCancel()"
+            >
+              <button
+                *for="tile in tiles()"
+                g-key="tile.id"
+                type="button"
+                class="tile"
+                :class="tileClass(tile)"
+                :style="tileStyle(tile)"
+                :data-slot="tile.slot"
+                :data-id="tile.id"
+                :data-kind="tile.kind"
+                :aria-label="tileLabel(tile)"
+                :aria-pressed="selected() === tile.slot"
+                :aria-disabled="locked()"
+                :tabindex="focusSlot() === tile.slot ? 0 : -1"
+                @click="choose(tile.slot)"
+                @keydown="keyDown($event, tile.slot)"
+              >
+                <span class="tile-surface"
+                  ><svg aria-hidden="true"><use :href="tileIcon(tile)" /></svg
+                ></span>
+              </button>
+            </div>
+            <div class="pause-cover" g-show="paused()">
+              <span class="eyebrow">TAKE YOUR TIME</span>
+              <h2>A little breather.</h2>
+              <p>Your garden will wait for you.</p>
+              <button class="primary-button" @click="togglePause()">
+                Back to the garden <span aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="board-message"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <span class="message-spark" aria-hidden="true">✦</span
+            ><span>{message()}</span>
+          </div>
+          <div class="tools" aria-label="Game controls">
+            <button
+              @click="hint()"
+              :disabled="locked()"
+              aria-label="Show a possible match"
+            >
+              <span aria-hidden="true">☼</span> Hint
+            </button>
+            <button @click="undo()" :disabled="!canUndo()">
+              <span aria-hidden="true">↶</span> Undo
+            </button>
+            <button @click="togglePause()" :disabled="finished()">
+              <span aria-hidden="true">Ⅱ</span> {pauseLabel()}
+            </button>
+            <button @click="openDialog('restart')">
+              <span aria-hidden="true">⟳</span> Restart
+            </button>
+          </div>
+          <div class="replay-bar" g-show="replaying()">
+            <span>{replayLabel()}</span
+            ><button class="text-button" @click="stopReplay()">
+              Return to my garden
+            </button>
+          </div>
+          <p id="board-instructions" class="board-instructions">
+            Tap two neighbors or swipe to swap. Match 3 or more.
+          </p>
+          <div class="compact-sharing">
+            <button
+              class="text-button"
+              @click="shareReplay()"
+              :disabled="busy() || replaying()"
+            >
+              Share your replay ↗</button
+            ><button
+              class="text-button"
+              @click="watchReplay()"
+              :disabled="!canReplay()"
+            >
+              Watch replay ▷
+            </button>
+          </div>
+        </section>
+
+        <aside class="field-notes" aria-label="Garden field notes">
+          <div class="field-note-head">
+            <span>FIELD NOTES</span><span aria-hidden="true">01 / 03</span>
+          </div>
+          <div class="sample-match" aria-hidden="true">
+            <svg><use href="#flower" /></svg><svg><use href="#flower" /></svg
+            ><svg><use href="#flower" /></svg>
+          </div>
+          <h2>Good things<br />come in threes.</h2>
+          <p>
+            Line up matching pieces.<br />Let the little chain reactions<br />do
+            their thing.
+          </p>
+          <div class="note-divider"></div>
+          <div class="harvest-heading">YOUR LITTLE HARVEST</div>
+          <div class="harvest-list">
+            <div
+              *for="plant in harvestView()"
+              g-key="plant.kind"
+              class="harvest-item"
+            >
+              <svg :class="plant.className" aria-hidden="true">
+                <use :href="plant.icon" /></svg
+              ><span>{plant.name}</span><strong>{plant.count}</strong>
+            </div>
+          </div>
+          <div class="share-note">
+            <span class="eyebrow">A GARDEN WORTH SHARING</span
+            ><button
+              class="text-button"
+              @click="shareReplay()"
+              :disabled="busy() || replaying()"
+            >
+              Share your replay <span aria-hidden="true">↗</span></button
+            ><button
+              class="text-button muted-button"
+              @click="watchReplay()"
+              :disabled="!canReplay()"
+            >
+              Watch this garden grow <span aria-hidden="true">▷</span>
+            </button>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="site-footer">
+        <span class="save-status"
+          ><span :class="saveDot()"></span>{saveStatus()}</span
+        >
+        <div>
+          <button class="text-button" @click="openDialog('settings')">
+            Sound & motion</button
+          ><span class="footer-divider">/</span
+          ><span>Made to be a small good thing.</span>
         </div>
-        <div class="board-message" role="status" aria-live="polite" aria-atomic="true"><span class="message-spark" aria-hidden="true">✦</span><span>{message()}</span></div>
-        <div class="tools" aria-label="Game controls">
-          <button @click="hint()" :disabled="locked()" aria-label="Show a possible match"><span aria-hidden="true">☼</span> Hint</button>
-          <button @click="undo()" :disabled="!canUndo()"><span aria-hidden="true">↶</span> Undo</button>
-          <button @click="togglePause()" :disabled="finished()"><span aria-hidden="true">Ⅱ</span> {pauseLabel()}</button>
-          <button @click="openDialog('restart')"><span aria-hidden="true">⟳</span> Restart</button>
+      </footer>
+
+      <dialog
+        id="garden-dialog"
+        @cancel.prevent="closeDialog()"
+        aria-labelledby="dialog-title"
+      >
+        <button
+          class="dialog-close icon-button"
+          @click="closeDialog()"
+          aria-label="Close dialog"
+        >
+          ×
+        </button>
+        <span class="eyebrow">A LITTLE FIELD GUIDE</span>
+        <h2 id="dialog-title">{dialogTitle()}</h2>
+        <div g-show="modal() === 'help'" class="dialog-content">
+          <p>
+            Swap neighboring pieces to make a horizontal or vertical line of at
+            least three. Diagonals don't count.
+          </p>
+          <ol>
+            <li>A match earns <strong>20 points per piece</strong>.</li>
+            <li>
+              Falling pieces can match again. Each cascade adds a multiplier:
+              ×2, ×3, and so on.
+            </li>
+            <li>
+              You have <strong>24 successful moves</strong>. Swaps without a
+              match are free.
+            </li>
+          </ol>
+          <p>
+            Reach 1,800 points to make your garden bloom. Keep playing to finish
+            your 24 moves. If no matches are possible, the garden reshuffles
+            itself.
+          </p>
+          <div class="keyboard-note">
+            <strong>Keyboard-friendly, too.</strong><br />Tab into the board.
+            Arrow keys move focus; Enter or Space selects a piece. Select a
+            neighbor to swap. Escape clears selection.
+          </div>
+          <button class="primary-button" @click="closeDialog()">
+            Let's grow something →
+          </button>
         </div>
-        <div class="replay-bar" g-show="replaying()"><span>{replayLabel()}</span><button class="text-button" @click="stopReplay()">Return to my garden</button></div>
-        <p id="board-instructions" class="board-instructions">Tap two neighbors or swipe to swap. Match 3 or more.</p>
-        <div class="compact-sharing"><button class="text-button" @click="shareReplay()" :disabled="busy() || replaying()">Share your replay ↗</button><button class="text-button" @click="watchReplay()" :disabled="!canReplay()">Watch replay ▷</button></div>
-      </section>
-
-      <aside class="field-notes" aria-label="Garden field notes">
-        <div class="field-note-head"><span>FIELD NOTES</span><span aria-hidden="true">01 / 03</span></div>
-        <div class="sample-match" aria-hidden="true"><svg><use href="#flower"/></svg><svg><use href="#flower"/></svg><svg><use href="#flower"/></svg></div>
-        <h2>Good things<br>come in threes.</h2>
-        <p>Line up matching pieces.<br>Let the little chain reactions<br>do their thing.</p>
-        <div class="note-divider"></div>
-        <div class="harvest-heading">YOUR LITTLE HARVEST</div>
-        <div class="harvest-list"><div *for="plant in harvestView()" g-key="plant.kind" class="harvest-item"><svg :class="plant.className" aria-hidden="true"><use :href="plant.icon"/></svg><span>{plant.name}</span><strong>{plant.count}</strong></div></div>
-        <div class="share-note"><span class="eyebrow">A GARDEN WORTH SHARING</span><button class="text-button" @click="shareReplay()" :disabled="busy() || replaying()">Share your replay <span aria-hidden="true">↗</span></button><button class="text-button muted-button" @click="watchReplay()" :disabled="!canReplay()">Watch this garden grow <span aria-hidden="true">▷</span></button></div>
-      </aside>
-    </main>
-
-    <footer class="site-footer"><span class="save-status"><span :class="saveDot()"></span>{saveStatus()}</span><div><button class="text-button" @click="openDialog('settings')">Sound & motion</button><span class="footer-divider">/</span><span>Made to be a small good thing.</span></div></footer>
-
-    <dialog id="garden-dialog" @cancel.prevent="closeDialog()" aria-labelledby="dialog-title">
-      <button class="dialog-close icon-button" @click="closeDialog()" aria-label="Close dialog">×</button>
-      <span class="eyebrow">A LITTLE FIELD GUIDE</span><h2 id="dialog-title">{dialogTitle()}</h2>
-      <div g-show="modal() === 'help'" class="dialog-content"><p>Swap neighboring pieces to make a horizontal or vertical line of at least three. Diagonals don't count.</p><ol><li>A match earns <strong>20 points per piece</strong>.</li><li>Falling pieces can match again. Each cascade adds a multiplier: ×2, ×3, and so on.</li><li>You have <strong>24 successful moves</strong>. Swaps without a match are free.</li></ol><p>Reach 1,800 points to make your garden bloom. Keep playing to finish your 24 moves. If no matches are possible, the garden reshuffles itself.</p><div class="keyboard-note"><strong>Keyboard-friendly, too.</strong><br>Tab into the board. Arrow keys move focus; Enter or Space selects a piece. Select a neighbor to swap. Escape clears selection.</div><button class="primary-button" @click="closeDialog()">Let's grow something →</button></div>
-      <div g-show="modal() === 'settings'" class="dialog-content"><label class="setting-row"><span><strong>Garden sounds</strong><small>Gentle notes for matches. Off by default.</small></span><input type="checkbox" :checked="soundEnabled()" @change="setSound($event.target.checked)"></label><label class="setting-row"><span><strong>Less movement</strong><small>Your device's reduced-motion setting is always respected.</small></span><input type="checkbox" :checked="lessMotion()" @change="setMotion($event.target.checked)"></label><p class="small-copy">Everything stays on this device. No accounts, trackers or network requests during play.</p><button class="primary-button" @click="closeDialog()">All set →</button></div>
-      <div g-show="modal() === 'restart'" class="dialog-content"><p>Start this same garden from the beginning? Your current moves will be cleared. Your personal best stays.</p><div class="dialog-actions"><button class="secondary-button" @click="closeDialog()">Keep growing</button><button class="primary-button" @click="restart()">Start again</button></div></div>
-      <div g-show="modal() === 'garden'" class="dialog-content"><p>A new garden replaces the one saved on this device. Daily gardens use the same seed for everyone, changing at midnight UTC.</p><button class="choice-card" @click="newGarden('daily')"><strong>Today's garden <span>☼</span></strong><small>A shared little starting point.</small></button><button class="choice-card" @click="newGarden('random')"><strong>A surprise garden <span>✦</span></strong><small>Something fresh, just for you.</small></button><label class="seed-input">Or enter a garden code<input id="seed-input" maxlength="48" autocomplete="off" spellcheck="false" placeholder="e.g. sunday-morning" :value="seedInput()" @input="setSeedInput($event.target.value)"></label><p class="input-error" role="alert">{seedError()}</p><button class="primary-button" @click="newGarden('code')">Plant this garden →</button></div>
-      <div g-show="modal() === 'result'" class="dialog-content"><div class="result-flower" aria-hidden="true"><svg><use href="#flower"/></svg></div><p class="result-score">{score()} <span>points</span></p><p>{resultMessage()}</p><div class="dialog-actions"><button class="secondary-button" @click="shareReplay()">Share replay ↗</button><button class="primary-button" @click="newGarden('random')">A fresh garden →</button></div><button class="text-button" @click="watchReplay()">Watch your 24 moves again ▷</button></div>
-      <div g-show="modal() === 'share'" class="dialog-content"><p>Your replay includes the garden code and your moves, so a friend can watch the same chain reactions.</p><label class="seed-input">Replay link<textarea id="share-url" rows="4" readonly :value="shareUrl()"></textarea></label><button class="primary-button" @click="copyShare()">Copy replay link ↗</button><p role="status">{shareMessage()}</p></div>
-    </dialog>
-  </div>
-  <noscript><div class="noscript"><h1>Bloomfall</h1><p>This little garden needs JavaScript to play. Enable it and reload to begin.</p></div></noscript>
-  <script type="module" src="/src/main.js"></script>
-</body>
+        <div g-show="modal() === 'settings'" class="dialog-content">
+          <label class="setting-row"
+            ><span
+              ><strong>Garden sounds</strong><small>{soundNote()}</small></span
+            ><input
+              type="checkbox"
+              :checked="soundEnabled()"
+              :disabled="!soundSupported()"
+              @change="setSound($event.target.checked)" /></label
+          ><label class="setting-row"
+            ><span
+              ><strong>Less movement</strong
+              ><small
+                >Your device's reduced-motion setting is always
+                respected.</small
+              ></span
+            ><input
+              type="checkbox"
+              :checked="lessMotion()"
+              @change="setMotion($event.target.checked)"
+          /></label>
+          <p class="small-copy">
+            Everything stays on this device. No accounts, trackers or network
+            requests during play.
+          </p>
+          <button class="primary-button" @click="closeDialog()">
+            All set →
+          </button>
+        </div>
+        <div g-show="modal() === 'restart'" class="dialog-content">
+          <p>
+            Start this same garden from the beginning? Your current moves will
+            be cleared. Your personal best stays.
+          </p>
+          <div class="dialog-actions">
+            <button class="secondary-button" @click="closeDialog()">
+              Keep growing</button
+            ><button class="primary-button" @click="restart()">
+              Start again
+            </button>
+          </div>
+        </div>
+        <div g-show="modal() === 'garden'" class="dialog-content">
+          <p>
+            A new garden replaces the one saved on this device. Daily gardens
+            use the same seed for everyone, changing at midnight UTC.
+          </p>
+          <button class="choice-card" @click="newGarden('daily')">
+            <strong>Today's garden <span>☼</span></strong
+            ><small>A shared little starting point.</small></button
+          ><button class="choice-card" @click="newGarden('random')">
+            <strong>A surprise garden <span>✦</span></strong
+            ><small>Something fresh, just for you.</small></button
+          ><label class="seed-input"
+            >Or enter a garden code<input
+              id="seed-input"
+              maxlength="48"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="e.g. sunday-morning"
+              :value="seedInput()"
+              @input="setSeedInput($event.target.value)"
+          /></label>
+          <p class="input-error" role="alert">{seedError()}</p>
+          <button class="primary-button" @click="newGarden('code')">
+            Plant this garden →
+          </button>
+        </div>
+        <div g-show="modal() === 'result'" class="dialog-content">
+          <div class="result-flower" aria-hidden="true">
+            <svg><use href="#flower" /></svg>
+          </div>
+          <p class="result-score">{score()} <span>points</span></p>
+          <p>{resultMessage()}</p>
+          <div class="dialog-actions">
+            <button class="secondary-button" @click="shareReplay()">
+              Share replay ↗</button
+            ><button class="primary-button" @click="newGarden('random')">
+              A fresh garden →
+            </button>
+          </div>
+          <button class="text-button" @click="watchReplay()">
+            Watch your 24 moves again ▷
+          </button>
+        </div>
+        <div g-show="modal() === 'share'" class="dialog-content">
+          <p>
+            Your replay includes the garden code and your moves, so a friend can
+            watch the same chain reactions.
+          </p>
+          <label class="seed-input"
+            >Replay link<textarea
+              id="share-url"
+              rows="4"
+              readonly
+              :value="shareUrl()"
+            ></textarea></label
+          ><button class="primary-button" @click="copyShare()">
+            Copy replay link ↗
+          </button>
+          <p role="status">{shareMessage()}</p>
+        </div>
+      </dialog>
+    </div>
+    <noscript
+      ><div class="noscript">
+        <h1>Bloomfall</h1>
+        <p>
+          This little garden needs JavaScript to play. Enable it and reload to
+          begin.
+        </p>
+      </div></noscript
+    >
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>
