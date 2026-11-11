@@ -62,8 +62,27 @@ Mouse/touch pointer capture now owns each held gesture. The piece lifts, follows
 Verification for this follow-up: 22 distinct targeted cases passed across Chromium, Firefox and WebKit, with the two non-Chromium CDP touch cases skipped. Coverage includes direction changes before release, cancellation, keyboard use after cancellation, two-click swaps, mobile swipes, restart and cleanup. The cancellation test was corrected to use the actual pointer ID after Firefox exposed its different ID; all six cancellation/held-cleanup cases then passed. The production build passed and the held-piece desktop screenshot was visually inspected. Earlier performance measurements above are the original baseline, not a benchmark of pointer-move performance.
 
 1. **Document this integration pattern.** A small guide on deterministic domain state, reactive view projections, cancellation and keyed DOM would help developers build interactive applications without inventing another API.
-2. **Investigate keyed reordering cost with an isolated benchmark.** The identity behavior is correct, while mutation counts suggest room to reduce moves. Do not infer a core defect solely from this game's timing.
+2. **Investigate keyed reordering cost with an isolated benchmark.** Completed in the follow-up below; the candidate reduces retained-node moves and remains unreleased.
 3. **Evaluate an optional smaller entry point.** This game's production JS bundle is about 243 KB raw / 76.7 KB gzip with the current published CSP entry. Check what is retained before proposing a split; preserving the existing public API is essential.
 4. **Use a different second workload.** A board-game/replay app with a worker-owned rules engine would test async computation and cancellation boundaries that this 64-cell match-three game cannot establish.
 
 No new GyosJS API or version bump is required for this delivery. This game remains on the published release. The next project should be chosen from the remaining roadmap after reviewing this game and its evidence.
+
+### Follow-up: candidate keyed-list placement
+
+The core now has an unreleased candidate that preserves a longest increasing subsequence of contiguous keyed rows and moves only the remaining rows. It keeps the established placement fallback around leaving transitions and unrelated siblings. An isolated 64-row benchmark reduces a distant swap from 61 retained-node moves to 2 and a left rotation from 63 to 1; reversal still needs 63. Core regression tests also cover focus/text selection, all permutations of five rows, nested scope lifetime and leave/re-add behavior in standard and CSP bundles.
+
+Bloomfall's comparison server aliases only `gyosjs/csp` to a supplied core bundle, on port 4198. Published dependencies and the lockfile remain unchanged. See the README for reproduction. Raw evidence: [published baseline](evidence/keyed-baseline.json) and [candidate](evidence/keyed-candidate.json), measured on 2026-11-11.
+
+| Same deterministic 24-move workload | Published 0.5.0 | Candidate |
+| --- | ---: | ---: |
+| Score / controller frames | 3,480 / 184 | 3,480 / 184 |
+| Board additions / removals | 1,087 / 1,087 | 393 / 393 |
+| Surviving DOM identities | 1,430 / 1,430 | 1,430 / 1,430 |
+| Final tiles | 64 | 64 |
+| Input-to-next-rAF median / p95 | 85.0 / 179.3 ms | 30.9 / 76.8 ms |
+| Retired roots / pending frames after each cleanup | 0 / 0 | 0 / 0 |
+
+The deterministic mutation count falls **63.8%**. These counts include retained-node moves and actual replacements, not newly allocated tiles alone. Timing samples vary substantially: the earlier baseline above already had a 29.1 ms median, so this pair does not establish a universal speedup or 60 FPS. Both runs kept 3,810 DOM nodes and 16 listeners across 12 cleanup/GC cycles. Candidate heap levels were higher (~5.34–5.49 MB versus ~3.86–4.03 MB); the direct-source candidate and dependency-optimized baseline have different development loading, so this is not evidence of a memory reduction or proof of leak-freedom.
+
+The complete browser suite against the candidate passed **46 tests**, with **2 CDP-only touch cases skipped** on non-Chromium browsers. Core validation passed 315 unit/integration tests and 123 browser tests, with 6 existing Windows WebKit audio skips. No gameplay rule, replay format, package version or production runtime import changed in this follow-up.

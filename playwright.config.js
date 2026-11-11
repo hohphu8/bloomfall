@@ -1,10 +1,11 @@
 import { defineConfig } from "@playwright/test";
+const baseURL = process.env.BLOOMFALL_URL || "http://127.0.0.1:4186";
 export default defineConfig({
   testDir: "./tests/browser",
   timeout: 45000,
   workers: 1,
   use: {
-    baseURL: "http://127.0.0.1:4186",
+    baseURL,
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
   },
@@ -21,7 +22,7 @@ export default defineConfig({
   ],
   webServer: {
     command: "npm run dev",
-    url: "http://127.0.0.1:4186",
+    url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 60000,
   },

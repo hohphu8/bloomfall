@@ -1,0 +1,257 @@
+{
+  "runtime": "published gyosjs@0.5.0",
+  "measuredAt": "2026-11-11T13:48:41.685Z",
+  "browser": "157.0.8103.39",
+  "node": "v22.18.0",
+  "platform": "win32 10.0.26300 x64",
+  "cpu": "Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
+  "mode": "Vite development, headless Chrome, full motion, no CPU/network throttling",
+  "limitations": "Input latency ends at the next rAF callback, not actual pixel presentation. Heap includes Vite and browser state; 12 cycles cannot prove leak-freedom. No mobile hardware or 60 FPS guarantee.",
+  "measurements": {
+    "moves": 24,
+    "score": 3480,
+    "inputToNextRafMs": {
+      "median": 85,
+      "p95": 179.29999995231628,
+      "max": 217.60000002384186
+    },
+    "rafIntervalMs": {
+      "samples": 854,
+      "median": 17,
+      "p95": 132.79999999999927,
+      "max": 548.5
+    },
+    "dom": {
+      "additions": 1087,
+      "removals": 1087,
+      "survivingTileComparisons": 1430,
+      "retainedIdentities": 1430,
+      "finalTiles": 64
+    },
+    "controller": {
+      "moves": [
+        {
+          "ms": 942.2,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 749.9,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 1609.8,
+          "frames": 6,
+          "combo": 2
+        },
+        {
+          "ms": 1110.6,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 1169.3,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 1705.1,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 2005.3,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 4547.6,
+          "frames": 8,
+          "combo": 3
+        },
+        {
+          "ms": 3141.6,
+          "frames": 8,
+          "combo": 3
+        },
+        {
+          "ms": 997.9,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 2340.8,
+          "frames": 8,
+          "combo": 3
+        },
+        {
+          "ms": 943.6,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 812.2,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 907.3,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 2225.1,
+          "frames": 8,
+          "combo": 3
+        },
+        {
+          "ms": 1571.9,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 1540.7,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 952.1,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 1085.9,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 1620.9,
+          "frames": 6,
+          "combo": 2
+        },
+        {
+          "ms": 2713.1,
+          "frames": 8,
+          "combo": 3
+        },
+        {
+          "ms": 893.6,
+          "frames": 4,
+          "combo": 1
+        },
+        {
+          "ms": 1369.6,
+          "frames": 6,
+          "combo": 2
+        },
+        {
+          "ms": 852.9,
+          "frames": 4,
+          "combo": 1
+        }
+      ],
+      "cancellations": 0,
+      "frames": 184
+    }
+  },
+  "lifecycle": [
+    {
+      "cycle": 0,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3871928,
+      "nodes": 3810,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 1,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3856968,
+      "nodes": 3810,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 2,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3857288,
+      "nodes": 3810,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 3,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3889120,
+      "nodes": 3810,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 4,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3893760,
+      "nodes": 3810,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 5,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3925684,
+      "nodes": 3810,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 6,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 3927008,
+      "nodes": 3810,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 7,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 4017188,
+      "nodes": 3810,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 8,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 4018980,
+      "nodes": 3810,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 9,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 4022344,
+      "nodes": 3810,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 10,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 4023004,
+      "nodes": 3810,
+      "eventListeners": 16
+    },
+    {
+      "cycle": 11,
+      "pendingFrames": 0,
+      "retiredRootsRetained": 0,
+      "heapBytes": 4025312,
+      "nodes": 3810,
+      "eventListeners": 16
+    }
+  ],
+  "pageErrors": []
+}

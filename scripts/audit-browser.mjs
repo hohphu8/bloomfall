@@ -1,6 +1,7 @@
 import { chromium } from "@playwright/test";
 import { writeFile, mkdir } from "node:fs/promises";
 import os from "node:os";
+import path from "node:path";
 
 const browser = await chromium.launch({
   channel: process.platform === "win32" ? "chrome" : undefined,
@@ -161,6 +162,7 @@ for (let cycle = 0; cycle < 12; cycle++) {
   });
 }
 const result = {
+  runtime: process.env.BLOOMFALL_RUNTIME_LABEL || "published gyosjs@0.5.0",
   measuredAt: new Date().toISOString(),
   browser: browser.version(),
   node: process.version,
@@ -182,11 +184,10 @@ if (process.env.BLOOMFALL_HEAP === "1") {
   await mkdir(".local", { recursive: true });
   await writeFile(".local/audit.heapsnapshot", chunks.join(""));
 }
-await mkdir("docs/evidence", { recursive: true });
-await writeFile(
-  "docs/evidence/browser-audit.json",
-  JSON.stringify(result, null, 2) + "\n",
-);
+const reportPath =
+  process.env.BLOOMFALL_REPORT || "docs/evidence/browser-audit.json";
+await mkdir(path.dirname(reportPath), { recursive: true });
+await writeFile(reportPath, JSON.stringify(result, null, 2) + "\n");
 console.log(
   JSON.stringify(
     {

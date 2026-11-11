@@ -60,6 +60,18 @@ For lifecycle and performance evidence, run `npm run dev` in one terminal, then 
 
 See [dogfood findings](docs/GYOSJS-DOGFOOD.md) and [the original plan](docs/PLAN.md). Tests and browser audit helpers are not imported into the production bundle.
 
+### Compare a candidate GyosJS runtime locally
+
+Build the core first, then start a separate development server without changing this game's dependency or lockfile:
+
+```sh
+node scripts/compare-vite.mjs ../Gyosjs/dist/gyos.csp.esm.js
+```
+
+In another terminal, set `BLOOMFALL_URL=http://127.0.0.1:4198` and run `npm run test:e2e` or `npm run audit:browser`. Start the candidate server before the test suite; this local workflow reuses that server and is not intended for `CI=1`. For separate audit evidence, also set `BLOOMFALL_RUNTIME_LABEL` to a descriptive label and `BLOOMFALL_REPORT` to an output JSON path, for example `docs/evidence/keyed-candidate.json`. Environment-variable syntax depends on the shell; PowerShell uses `$env:BLOOMFALL_URL='http://127.0.0.1:4198'`.
+
+For the published baseline, use the normal server on port 4186, clear `BLOOMFALL_URL` and `BLOOMFALL_RUNTIME_LABEL`, and choose a different report path. Keep machine load comparable and measure runs separately. Clear these variables afterward to restore the default test/audit behavior.
+
 ## Structure
 
 | File                        | Responsibility                                                                                     |
@@ -73,4 +85,4 @@ See [dogfood findings](docs/GYOSJS-DOGFOOD.md) and [the original plan](docs/PLAN
 
 The authoritative engine state is separate from transient animation frames. No animation callback can commit after its run is cancelled. Changes to random-number consumption, scoring or move rules must preserve old replay semantics or introduce a new replay rules version.
 
-This repository is intentionally local-only at handoff. No remote or publishing workflow has been configured.
+Candidate-runtime checks run locally; publishing the game is managed separately by the repository owner.
