@@ -1,4 +1,4 @@
-import Gyos from "gyosjs/csp";
+import * as Gyos from "gyosjs/csp";
 import {
   createGame,
   play,

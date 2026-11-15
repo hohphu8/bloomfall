@@ -86,3 +86,5 @@ For the published baseline, use the normal server on port 4186, clear `BLOOMFALL
 The authoritative engine state is separate from transient animation frames. No animation callback can commit after its run is cancelled. Changes to random-number consumption, scoring or move rules must preserve old replay semantics or introduce a new replay rules version.
 
 Candidate-runtime checks run locally; publishing the game is managed separately by the repository owner.
+
+The [bundle follow-up](docs/PERFORMANCE.md) measures a smaller production bundle using existing CSP namespace exports, without changing the pinned runtime or game behavior.
