@@ -399,7 +399,12 @@
               :checked="soundEnabled()"
               :disabled="!soundSupported()"
               @change="setSound($event.target.checked)" /></label
-          ><label class="setting-row"
+          ><label class="setting-row">
+            <span><strong>Volume · {volume()}%</strong><small>Adjust to your device. Zero is silent.</small></span>
+            <input type="range" min="0" max="100" step="5" aria-label="Sound volume"
+              :value="volume()" :disabled="!soundSupported()"
+              @input="setVolume($event.target.value)" @change="previewSound()" />
+          </label><label class="setting-row"
             ><span
               ><strong>Less movement</strong
               ><small

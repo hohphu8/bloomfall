@@ -11,6 +11,7 @@ import {
   MOVES,
 } from "./engine.js";
 import "./style.css";
+import { GardenAudio } from "./audio.js";
 
 const TYPES = [
   ["Blossom", "flower"],
@@ -69,7 +70,8 @@ Gyos.scope("Garden", () => {
   const saveStatus = signal("Your garden saves as you play."),
     saved = signal(true);
   const soundEnabled = signal(false),
-    soundNote = signal("Gentle notes for matches. Off by default."),
+    soundNote = signal("Pops, falling pieces and rising cascade notes. Off by default."),
+    volume = signal(65),
     lessMotion = signal(false),
     systemMotion = signal(false);
   const soundSupported =
@@ -119,7 +121,7 @@ Gyos.scope("Garden", () => {
     try {
       localStorage.setItem(
         PREFS,
-        JSON.stringify({ sound: soundEnabled(), motion: lessMotion() }),
+        JSON.stringify({ sound: soundEnabled(), volume: volume(), motion: lessMotion() }),
       );
     } catch {
       storageError();
@@ -173,6 +175,7 @@ Gyos.scope("Garden", () => {
 
   function cancel() {
     cancelDrag();
+    audio?.stop();
     abort.abort();
     abort = new AbortController();
     metrics.cancellations++;
@@ -211,31 +214,15 @@ Gyos.scope("Garden", () => {
     });
   }
 
-  function sound(level = 1) {
+  async function sound(kind = "clear", level = 1) {
     if (!soundEnabled() || document.hidden || !alive) return;
     try {
-      audio ||= new (window.AudioContext || window.webkitAudioContext)();
-      if (audio.state === "suspended") void audio.resume().catch(() => {});
-      const note = audio.createOscillator(),
-        gain = audio.createGain(),
-        now = audio.currentTime;
-      note.type = "sine";
-      note.frequency.value = [392, 440, 523.25, 659.25, 783.99][
-        Math.min(level - 1, 4)
-      ];
-      gain.gain.setValueAtTime(0, now);
-      gain.gain.linearRampToValueAtTime(0.035, now + 0.015);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.23);
-      note.connect(gain);
-      gain.connect(audio.destination);
-      note.start(now);
-      note.stop(now + 0.25);
-      note.onended = () => {
-        note.disconnect();
-        gain.disconnect();
-      };
+      audio ||= new GardenAudio(window.AudioContext || window.webkitAudioContext, volume());
+      await audio.play(kind, level);
     } catch {
+      if (!alive) return;
       soundEnabled(false);
+      audio?.stop();
       soundNote("Sound could not start. You can keep playing quietly.");
     }
   }
@@ -260,6 +247,7 @@ Gyos.scope("Garden", () => {
     selected(-1);
     hinted([]);
     combo(0);
+    void sound("swap");
     try {
       for (const frame of result.frames) {
         if (signal.aborted) return false;
@@ -274,8 +262,9 @@ Gyos.scope("Garden", () => {
               ? `Lovely! Cascade ×${frame.combo} · +${frame.gain} points`
               : `A little bloom · +${frame.gain} points`,
           );
-          sound(frame.combo);
+          void sound("clear", frame.combo);
         }
+        if (frame.phase === "fall") void sound("fall");
         if (frame.phase === "shuffle")
           message("A fresh arrangement — this garden needed a little shuffle.");
         if (frame.phase !== "settled")
@@ -307,7 +296,10 @@ Gyos.scope("Garden", () => {
           combo: result.combo,
         });
         if (metrics.moves.length > 200) metrics.moves.shift();
-      } else message("Almost! Try a swap that lines up three. No move lost.");
+      } else {
+        void sound("invalid");
+        message("Almost! Try a swap that lines up three. No move lost.");
+      }
       if (restoreFocus) focusBoard();
       if (state.moves === 0 && !replaying()) openDialog("result");
       return result.valid;
@@ -568,6 +560,7 @@ Gyos.scope("Garden", () => {
     cancelDrag();
     if (!finished()) {
       paused(!paused());
+      if (paused()) audio?.stop();
       if (!paused()) focusBoard();
     }
   }
@@ -654,6 +647,8 @@ Gyos.scope("Garden", () => {
     try {
       const preferences = JSON.parse(read(PREFS) || "{}");
       soundEnabled(soundSupported && preferences.sound === true);
+      if (typeof preferences.volume === "number" && Number.isFinite(preferences.volume))
+        volume(Math.max(0, Math.min(100, preferences.volume)));
       lessMotion(preferences.motion === true);
     } catch {
       /* A damaged preference never blocks play. */
@@ -677,6 +672,7 @@ Gyos.scope("Garden", () => {
     best,
     saveStatus,
     soundEnabled,
+    volume,
     soundNote,
     soundSupported: () => soundSupported,
     lessMotion,
@@ -746,9 +742,16 @@ Gyos.scope("Garden", () => {
     copyShare,
     setSound: (value) => {
       soundEnabled(value);
-      if (value) sound();
+      if (value) void sound();
+      else audio?.stop();
       persistPrefs();
     },
+    setVolume: (value) => {
+      volume(Math.max(0, Math.min(100, Number(value) || 0)));
+      audio?.setVolume(volume());
+      persistPrefs();
+    },
+    previewSound: () => { void sound(); },
     setMotion: (value) => {
       lessMotion(value);
       persistPrefs();
@@ -768,8 +771,10 @@ Gyos.scope("Garden", () => {
         "visibilitychange",
         () => {
           if (document.hidden) cancelDrag();
-          if (document.hidden && audio?.state === "running")
-            void audio.suspend();
+          if (document.hidden) {
+            audio?.stop();
+            if (audio?.context.state === "running") void audio.context.suspend().catch(() => {});
+          }
         },
         { signal: lifetime.signal },
       );
@@ -816,7 +821,7 @@ Gyos.scope("Garden", () => {
       cancelDrag();
       abort.abort();
       lifetime.abort();
-      if (audio) void audio.close();
+      if (audio) void audio.close().catch(() => {});
       if (import.meta.env.DEV) delete window.__bloomfall;
     },
   };

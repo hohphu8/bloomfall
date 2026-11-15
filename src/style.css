@@ -757,6 +757,10 @@ dialog h2 {
   accent-color: var(--green);
   flex-shrink: 0;
 }
+.setting-row input[type="range"] {
+  width: 115px;
+  max-width: 40%;
+}
 .small-copy {
   font-size: 12px;
   margin: 20px 0;

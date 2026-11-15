@@ -10,7 +10,7 @@
     "dev": "vite --host 127.0.0.1 --port 4186",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1 --port 4186",
-    "test": "node --test tests/engine.test.js",
+    "test": "node --test tests/*.test.js",
     "test:e2e": "playwright test",
     "test:production": "playwright test -c playwright.production.config.js",
     "audit:browser": "node scripts/audit-browser.mjs",

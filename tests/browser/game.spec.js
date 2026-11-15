@@ -30,6 +30,10 @@ test("sound and motion preferences persist, and audio closes on cleanup", async 
     await expect(page.locator("dialog")).toContainText("Sound is unavailable");
   }
   await page.getByRole("checkbox", { name: /Less movement/ }).check();
+  if (supportsAudio) {
+    await page.getByRole('slider', { name: 'Sound volume' }).fill('35');
+    await expect(page.locator('dialog')).toContainText('Volume · 35%');
+  }
   await expect(page.locator("#game")).toHaveClass("less-motion");
   expect(
     await page
@@ -60,6 +64,8 @@ test("sound and motion preferences persist, and audio closes on cleanup", async 
   await expect(
     page.getByRole("checkbox", { name: /Less movement/ }),
   ).toBeChecked();
+  if (supportsAudio)
+    await expect(page.getByRole('slider', { name: 'Sound volume' })).toHaveValue('35');
 });
 
 async function ready(page, seed = "test-garden") {

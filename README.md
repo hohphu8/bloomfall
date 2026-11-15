@@ -32,7 +32,7 @@ Deploy the contents of `dist/` to a static web host. Use HTTPS for clipboard sup
 - Hold and drag a piece to lift it and preview a neighboring swap. Change direction before releasing; return to the starting point, drop outside the board or press Escape to cancel without spending a move.
 - Tab into the board, use arrows to move focus, and Enter/Space to select. Escape clears selection. Shapes and accessible names distinguish pieces independently of color.
 - Hint, undo, pause, confirmed restart, daily/random/custom gardens and shareable replay are available. Daily seeds change at midnight **UTC**; an existing saved garden stays until you choose another.
-- Sound is off by default. Sound & motion offers synthesized notes and reduced movement; the operating system's reduced-motion setting always wins.
+- Sound is off by default. Sound & motion offers a saved 0–100% volume slider, swap/invalid-move cues, falling-piece taps and layered pops with rising cascade notes. Zero volume is silent. Pause, mute, hidden tabs and interrupted games stop pending sounds. The operating system's reduced-motion setting always wins.
 
 ## Saves and replays
 
@@ -59,6 +59,8 @@ The production smoke test starts its own preview on port 4196 and refuses to reu
 For lifecycle and performance evidence, run `npm run dev` in one terminal, then `npm run audit:browser` in another. Do not edit application files while measuring: Vite reloads invalidate the run. The audit writes `docs/evidence/browser-audit.json`. Optional `BLOOMFALL_HEAP=1` writes a large, ignored heap snapshot under `.local/` for diagnosis. `BLOOMFALL_URL` can select another Vite dev URL.
 
 See [dogfood findings](docs/GYOSJS-DOGFOOD.md) and [the original plan](docs/PLAN.md). Tests and browser audit helpers are not imported into the production bundle.
+
+See [audio feedback](docs/AUDIO-FOLLOWUP.md) for phase-specific cues, cascade sounds, volume and audio lifecycle behavior.
 
 ### Compare a candidate GyosJS runtime locally
 
