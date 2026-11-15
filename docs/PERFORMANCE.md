@@ -1,5 +1,7 @@
 # Bundle follow-up — 2026-11-15
 
+> Runtime rollout: the app now pins published GyosJS 0.5.6. The measurements below remain the original 0.5.1 import comparison, not measurements of the new package.
+
 Bloomfall remains on **GyosJS 0.5.1** and the **CSP entry**. The only application change is `import * as Gyos from 'gyosjs/csp'` instead of importing the default all-API object. All property accesses are static, allowing Vite to remove more unused exports while keeping the existing `Gyos.scope(...)` usage. No game rules, save/replay format, CSP policy or dependency version changed.
 
 Measured with Node 22.18.0 / Vite 6.4.6, production build, decimal kB:

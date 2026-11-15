@@ -1,6 +1,6 @@
 # Bloomfall
 
-A botanical match-three game built with **published GyosJS 0.5.1**, HTML, CSS and JavaScript. One standalone project: no Laravel, backend, account, game engine or remote repository required.
+A botanical match-three game built with **published GyosJS 0.5.6**, HTML, CSS and JavaScript. One standalone project: no Laravel, backend, account, game engine or remote repository required.
 
 ![Bloomfall desktop garden](docs/evidence/desktop.png)
 
@@ -88,3 +88,5 @@ The authoritative engine state is separate from transient animation frames. No a
 Candidate-runtime checks run locally; publishing the game is managed separately by the repository owner.
 
 The [bundle follow-up](docs/PERFORMANCE.md) measures a smaller production bundle using existing CSP namespace exports, without changing the pinned runtime or game behavior.
+
+See the [0.5.6 runtime rollout](docs/RUNTIME-0.5.6.md) for validation of the subsequent npm upgrade.
